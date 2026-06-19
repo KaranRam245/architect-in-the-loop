@@ -146,6 +146,10 @@ Writing principles for the doc:
   person re-litigating settled ground.
 - **Be concise.** Tighten every sentence; rejected-alternative notes are 1–2
   sentences each. Cut words that don't change meaning.
+- **Plain English.** Write it to be read aloud and understood on the first pass,
+  the way `plain-english` demands: short concrete sentences, no jargon the
+  reader has to decode, no AI tells. The doc has to land for whoever picks it up
+  later, not just for the two people who were in the room.
 
 Confirm the doc's location/naming with the user if it's not obvious from the
 repo, then write it.
