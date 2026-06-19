@@ -36,7 +36,18 @@ Two readings, both intended. The agent runs *in a loop*, a condition re-graded e
 
 ## Using them
 
-### Option 1: Install as a Claude Code Plugin (Recommended)
+### Option 1: Install from the marketplace (Recommended)
+
+This repo is also a Claude Code plugin marketplace. From inside Claude Code, add it and then install the plugin:
+
+```sh
+/plugin marketplace add raviautar/architect-in-the-loop
+/plugin install architect-in-the-loop@architect-in-the-loop
+```
+
+The first command registers the marketplace; the second installs the plugin and all four skills. The `architect-in-the-loop@architect-in-the-loop` form is `plugin@marketplace` — they share a name because this repo ships a single plugin.
+
+### Option 2: Install as a local Claude Code plugin
 
 You can install these skills as a local Claude Code plugin directly from your cloned directory:
 
@@ -50,7 +61,7 @@ Alternatively, you can test it temporarily in a single Claude Code session:
 claude --plugin-dir /path/to/architect-in-the-loop
 ```
 
-### Option 2: Copy Manual Skills
+### Option 3: Copy Manual Skills
 
 If you prefer to install them manually as individual skills, copy the folders into your skills directory:
 
