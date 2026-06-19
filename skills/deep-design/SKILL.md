@@ -66,6 +66,13 @@ code already states wastes their attention and signals you're not engaged with
 the real system. Use search/exploration tools (and parallel sub-agents for
 broad fan-out) to ground every claim in what's actually there.
 
+Research the prior art too. Before settling on directions, find how others
+have approached and solved this same problem, established patterns, named
+trade-offs, war stories, what existing tools or libraries do, so the solution
+space you bring isn't just what you invented on the spot. Web search and docs
+are fair game here. Bring back what's relevant and say where it came from; don't
+copy a pattern whose constraints don't match ours.
+
 Reserve questions for what the code *can't* tell you: intent, constraints,
 priorities, product behavior, and decisions only the user can make.
 
