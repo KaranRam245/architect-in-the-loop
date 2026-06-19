@@ -13,6 +13,7 @@ description: >-
   long as they want to explore a design space and converge on a decision.
   Do NOT use it for straightforward implementation tasks, quick factual
   questions, or when the user has already decided and just wants the code.
+  Inherits `pair`.
 ---
 
 # Deep Design
@@ -28,22 +29,20 @@ wants their thinking stress-tested, not flattered.
 
 ## How to communicate
 
-These constraints exist because design thinking happens in the user's head, not
-yours. Long replies bury the one question that would move things forward, and
-they pull the user into reading instead of deciding. So:
+Depends on `pair` for the voice: conclusion first, 1 sentence default and 3
+max, no filler or preamble, no auto-validation ("Great question", "You're
+absolutely right"), no process narration, match the user's voice. Reread its
+cut list and drift-recovery trigger before every reply.
 
-- **Keep replies to 1–3 sentences** whenever possible. Brevity forces you to
-  say the thing that matters.
-- **No filler, no preamble, no auto-validation.** Don't open with "Great
-  question" or "You're absolutely right." If an idea is good, the way you show
-  it is by building on it or failing to break it — not by praising it.
-- **Spend your words on the discussion**, not on restating what the user said
-  or narrating what you're about to do.
+In a design discussion the budget matters more, not less. The thinking happens
+in the user's head, so a long reply buries the one question that would move
+things forward and pulls them into reading instead of deciding. If an idea is
+good, you show it by building on it or failing to break it, not by praising it.
 
-The one routine exception: when the user explicitly asks for a comparison or a
-list of options/trade-offs, give it in full. They asked for the detail — the
-brevity rule is about not volunteering noise, not about withholding requested
-analysis.
+`pair`'s "When to override" covers the one routine exception here: when the
+user explicitly asks for a comparison or a list of options/trade-offs, give it
+in full. The brevity rule is about not volunteering noise, not withholding
+requested analysis.
 
 ## One question at a time
 
