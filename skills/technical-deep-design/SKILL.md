@@ -10,9 +10,9 @@ description: >-
   to implement it: "let's make a technical plan", "turn this ADR into a plan", "spec this out
   so a developer has no decisions left", "plan the implementation in detail", "I want a
   PLAN.md", or wants to walk implementation choices one by one before any code is written.
-  This is the bridge between deep-design (decides what and why, ends in an ADR) and
+  This is the bridge between architecture-deep-design (decides what and why, ends in an ADR) and
   goal-alignment (loops to implement): it converts a decided design into a developer-proof
-  build spec. Do NOT use it to make the design decision itself (that's deep-design) or to
+  build spec. Do NOT use it to make the design decision itself (that's architecture-deep-design) or to
   write/loop the code (that's goal-alignment). Inherits pair.
 ---
 
@@ -41,11 +41,11 @@ room). Front-load every decision now, while the user is present and cheap to con
 ## When this fits
 
 The design is settled and you're converting it to code-level instructions. Upstream of you,
-`deep-design` decided *what* and *why* (the ADR). Downstream, `goal-alignment` / a `/goal`
+`architecture-deep-design` decided *what* and *why* (the ADR). Downstream, `goal-alignment` / a `/goal`
 loop *implements*. You are the bridge: **decided design → developer-proof build spec**. You
 do not re-open the design, and you do not write code.
 
-If the user still hasn't decided the approach, stop and point them at `deep-design`. If the
+If the user still hasn't decided the approach, stop and point them at `architecture-deep-design`. If the
 plan is already exhaustive and they want it built, point them at `goal-alignment`.
 
 ## The method
@@ -147,7 +147,7 @@ this skill writes no code.
 - ❌ Recommending a name or signature without having read the real code it sits in.
 - ❌ Open-ended questions ("what should we call this?") instead of a grounded recommendation
   the user can accept or amend.
-- ❌ Re-opening the design decision (that's `deep-design`) or starting to code (that's
+- ❌ Re-opening the design decision (that's `architecture-deep-design`) or starting to code (that's
   `goal-alignment`).
 - ❌ Leaving exact strings (docstrings, field descriptions, signatures) for the developer to
   word — if it'll end up in the code, fix the wording now.
