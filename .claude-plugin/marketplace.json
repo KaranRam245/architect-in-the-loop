@@ -1,6 +1,6 @@
 {
   "name": "architect-in-the-loop",
-  "version": "0.2.0",
+  "version": "1.0.1",
   "description": "Skills for staying the architect while an agent does the work. You do the thinking; the agent runs in the loop.",
   "owner": {
     "name": "Ravi Autar",
@@ -11,7 +11,7 @@
       "name": "architect-in-the-loop",
       "source": "./",
       "description": "Skills for staying the architect while an agent does the work: pair (the voice), plain-english (sticky reset), teach (learning mode), and goal-alignment (the loop).",
-      "version": "0.2.0",
+      "version": "1.0.1",
       "license": "MIT",
       "repository": "https://github.com/raviautar/architect-in-the-loop",
       "author": {
