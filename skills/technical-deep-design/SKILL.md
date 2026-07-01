@@ -10,10 +10,9 @@ description: >-
   to implement it: "let's make a technical plan", "turn this ADR into a plan", "spec this out
   so a developer has no decisions left", "plan the implementation in detail", "I want a
   PLAN.md", or wants to walk implementation choices one by one before any code is written.
-  This is the bridge between architecture-deep-design (decides what and why, ends in an ADR) and
-  goal-alignment (loops to implement): it converts a decided design into a developer-proof
-  build spec. Do NOT use it to make the design decision itself (that's architecture-deep-design) or to
-  write/loop the code (that's goal-alignment). Inherits pair.
+  It bridges architecture-deep-design (decides what and why) and goal-alignment (loops to
+  implement). Do NOT use it to make the design decision itself or to write the code.
+  Inherits pair.
 ---
 
 # technical-deep-design
