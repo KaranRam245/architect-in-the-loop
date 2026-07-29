@@ -56,7 +56,12 @@ Plain english, compact enough to read aloud. Fill `piv-template.md`. Mermaid dia
    The status column is re-rendered at every checkpoint — `not-run` \| `blocked` \| `substituted` (a proxy stood in; never counts as a pass) \| `run-for-real` — so a skipped, blocked, or faked scenario cannot hide in prose.
 3. **Critic gate** (mandatory final layer) — a fresh context window that did not write the code reviews the diff and the verification that took place, judging whether the agent took shortcuts to make its work easier, whether any layer bypassed what it claimed to cover and must be redone, plus a code review and the laziness attack list: hardcoded values where config belongs, swallowed or blanket-caught errors, tests weakened/skipped/special-cased to go green, a verification layer marked passed by a proxy or argument instead of an actual run (byte-identity standing in for a runtime check, a reused prior-round result), copy-paste past an existing abstraction, leftover stubs/TODOs, AI-slop comments (scan every added comment; strip next-line narration and change-markers, keep only constraint comments), local workarounds leaking into the diff. The loop is graded by an evaluator that only reads the transcript, so it has structural pressure to cut corners; this is the counterweight. The critic must POST its finding list and each finding's disposition (the diff or line for a fix, or the rebuttal) into the conversation; "critic gate done" as a bare claim is not a proof the grader can check. Every finding fixed or explicitly rebutted.
 
-**Binary completion.** One line: all layers green with the feature demonstrated user-visibly (not merely grader-satisfied) + critic findings dispositioned + any human follow-up.
+**Binary completion.** One line: all layers green with the feature demonstrated user-visibly (not merely grader-satisfied) + the two standing hygiene rows below green + critic findings dispositioned + any human follow-up.
+
+**The two standing hygiene rows.** Every round carries these as rows in the scenario matrix, not as review notes. The grader reads only the done-clause and is otherwise blind to both, which is why they otherwise become the thing you have to ask for every round:
+
+1. **Comment hygiene** — the diff adds no slop comment (next-line narration, `NEW:`/`Added`/`This ensures`, any comment restating the code); constraint comments only, at the file's existing density. A WRITE-time constraint, re-read before writing code, not a cleanup the critic performs afterwards; the critic only confirms it held. A round that writes slop and strips it later has already spent your attention.
+2. **Build green** — for any round that opens or pushes to a PR, that PR's own checks pass. Push is not done; green is done. A failing check is fixed inside the round, or the specific check is reported and the round stops; never hand over a red build for you to notice.
 
 Where it lives: each round is its own file (e.g. `briefs/{name}-round{N}.md`), never an edit pile-up on the last round's file. Save it even for a same-session loop: long loops auto-compact and the file is what survives the summary; the worker re-reads it after a compact.
 
@@ -75,9 +80,12 @@ Same session (brief co-written there, Problem and Implementation already in cont
 feature's UI entry point loads ({client surface}); if anything is red, restart it and
 re-confirm, or report the blocked prerequisite and stop. Then implement. Done means all of:
 {layers as binary proofs, each naming the command, the rendered UI result for the broken
-turn, and the backend signal}; a fresh-context critic review posted in-transcript (including
-a scan of every added comment, with AI-slop comments stripped) with each finding fixed (diff
-shown) or rebutted; {constraint: what must not change}; or stop after {MAX_TURNS} turns.
+turn, and the backend signal}; the diff adds no slop comment (constraint comments only, at the
+file's existing density) shown by quoting every comment the diff adds; {if a PR is opened or
+pushed: that PR's checks all pass, quoted from the checks output, fixed inside this round if
+red}; a fresh-context critic review posted in-transcript confirming both of those held, with
+each finding fixed (diff shown) or rebutted; {constraint: what must not change}; or stop
+after {MAX_TURNS} turns.
 ```
 
 Fresh session or headless (brief saved to a file; keep this short, the file carries the detail):
@@ -86,9 +94,10 @@ Fresh session or headless (brief saved to a file; keep this short, the file carr
 /goal Implement round {N} per the brief at {file path}. Confirm its prerequisites once
 before implementing; if anything is red, restart and re-confirm, or report it and stop.
 Done means the brief's verification layers all pass (each shown in-transcript with the
-rendered UI result + backend signal) and its critic gate is posted (including a scan of
-every added comment, with AI-slop comments stripped) with every finding fixed or rebutted;
-or stop after {MAX_TURNS} turns.
+rendered UI result + backend signal), the diff adds no slop comment (quote every comment it
+adds), {if a PR is opened or pushed: that PR's checks all pass, quoted from the checks output
+and fixed inside this round if red}, and its critic gate is posted confirming those held with
+every finding fixed or rebutted; or stop after {MAX_TURNS} turns.
 ```
 
 The first line makes the agent read the file on turn 1, so the full PIV enters the transcript for both worker and grader.

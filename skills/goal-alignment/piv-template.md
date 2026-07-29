@@ -51,8 +51,12 @@ approved/cut/reordered before any prose; status is re-rendered every checkpoint 
 | 1 | `<nominal: the feature working>` | nominal | api | `<command → result + backend signal>` | not-run |
 | 2 | `<nominal, user-facing>` | nominal | ui | `<drive the real UI → rendered answer + backend log line>` | not-run |
 | 3 | `<edge, incl. the specific broken occurrence>` | edge | api\|ui | `<assertion>` | not-run |
+| H1 | comment hygiene (standing) | hygiene | api | quote every comment the diff adds; constraint comments only, file's existing density | not-run |
+| H2 | build green (standing, if a PR is opened/pushed) | hygiene | api | the PR's checks all pass, quoted from the checks output; red = fix in-round | not-run |
 
-Each scenario proven executable in prep. Full suite + lint green is its own row.
+Each scenario proven executable in prep. Full suite + lint green is its own row. H1/H2 are
+standing rows every round: write-time constraints the critic only confirms, never a cleanup
+pass after the fact.
 
 ### Critic gate (mandatory, fresh context)
 
@@ -60,7 +64,7 @@ A context window that did not write the code reviews the diff and the verificati
 
 ## Binary completion
 
-All layers green and demonstrated user-visibly + every critic finding dispositioned + any human follow-up noted.
+All layers green (incl. H1 comment hygiene and H2 build green) and demonstrated user-visibly + every critic finding dispositioned + any human follow-up noted.
 
 ## Compiled loop condition
 
