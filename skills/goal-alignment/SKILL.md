@@ -38,7 +38,22 @@ Plain english, compact enough to read aloud. Fill `piv-template.md`. Mermaid dia
 **Verification.** How the implementation is proven to have landed. Three parts, in order:
 
 1. **Prerequisites** — the gate before the loop starts; NOT a verification layer (a prerequisite proves the stack is ready, not that the feature works). The exact health command per touched service with its green signal, PLUS a client-UI reachability check: load the actual UI a user touches, sign in, reach the exact surface the feature lives on. Backend-green alone does not prove the user path works. Run this as a QA engineer: validate the stack AND propose any extra feature-readiness checks the feature needs. Everything provable now is proven live during design (fixtures captured, tokens minted, the workaround recorded for any step automation cannot drive). The stack decays, so prerequisites re-run right before arming and gate the loop's start; a red service is brought up or the loop does not start.
-2. **Layers** — renumbered from 1 each round, ordered cheapest-feedback-first. Each layer names the seam it covers and the failure class it catches, gives the exact command and the visible evidence, and is driven end-to-end through the client where the feature is user-facing: assert the rendered result in the UI AND the backend signal, never the backend signal alone (a replay test that never loaded the client can pass while the user-facing path is still broken). When the bug is about state across turns or requests, the layer must assert the specific occurrence that was broken (the second turn), not the happy-path first one, asserting only the first is how a loop "passes" while still broken. Each layer must be proven executable during prep, a layer you cannot actually run gets faked or skipped under loop pressure (a gesture automation can't drive an OS file picker, but setting the input directly may reach the same path; find that in prep). **A layer passes only by being run for real with its evidence in the transcript.** A static proxy or logical argument (a byte-identity diff, "structurally equivalent", a prior round's result) is a separate check, never a substitute for executing the layer the round names; disclosing the swap does not make it pass.
+2. **Scenarios, then layers.** Decide WHAT to prove before HOW. The scenarios are the part of test design that otherwise stays in the agent's head; surface them, co-designed one at a time with you (same rhythm as decisions, never an auto-inferred block). Two groups:
+   - **Nominal** — the feature doing its job, each stated as the observable that makes "fixed" checkable (the rendered answer, the row written, the file that appears). The happy paths a user would call "it works".
+   - **Edges** — walked from a standing checklist every round so none is forgotten:
+     - **Isolation / scope** — another user, session, tenant, or version must not see or affect it.
+     - **Boundary / malformed input** — empty, oversized, wrong type, missing field, special characters.
+     - **Failure path** — a dependency errors or is down: the feature degrades safely (no crash, no poisoned state) and the outage is visible, not silent.
+     - **Concurrency** — two operations at once in one scope (races, double-writes).
+     - **Repeat / state-across-turns** — the second occurrence, not just the first: the follow-up request, the re-run (asserting only the first is how a loop passes while still broken).
+
+   Keep the edges that apply and say why you cut the rest. Then place each scenario at the cheapest **layer** that catches it, renumbered from 1, cheapest-feedback-first: the API tier (unit/curl/log, seconds) then the UI tier (client-driven, minutes), the UI tier being the completion bar so API-green alone never passes. Each scenario names its seam and failure class, its exact command, and — where the feature is user-facing — asserts the rendered UI result AND the backend signal, never the backend signal alone (a replay that never loaded the client can pass while the user path is still broken). Every scenario must be proven executable during prep, one you cannot run gets faked or skipped under loop pressure (a gesture automation can't drive an OS file picker, but setting the input directly may reach the same path; find that in prep). **A scenario passes only by being run for real with its evidence in the transcript.** A static proxy or logical argument (a byte-identity diff, "structurally equivalent", a prior round's result) is a separate check, never a substitute.
+
+   The set opens with a **scenario matrix** you read in one look and approve, cut, or reorder before any prose:
+
+   | # | scenario | nominal / edge | layer (api\|ui) | assertion (UI result + backend signal) | status |
+
+   The status column is re-rendered at every checkpoint — `not-run` \| `blocked` \| `substituted` (a proxy stood in; never counts as a pass) \| `run-for-real` — so a skipped, blocked, or faked scenario cannot hide in prose.
 3. **Critic gate** (mandatory final layer) — a fresh context window that did not write the code reviews the diff and the verification that took place, judging whether the agent took shortcuts to make its work easier, whether any layer bypassed what it claimed to cover and must be redone, plus a code review and the laziness attack list: hardcoded values where config belongs, swallowed or blanket-caught errors, tests weakened/skipped/special-cased to go green, a verification layer marked passed by a proxy or argument instead of an actual run (byte-identity standing in for a runtime check, a reused prior-round result), copy-paste past an existing abstraction, leftover stubs/TODOs, AI-slop comments (scan every added comment; strip next-line narration and change-markers, keep only constraint comments), local workarounds leaking into the diff. The loop is graded by an evaluator that only reads the transcript, so it has structural pressure to cut corners; this is the counterweight. The critic must POST its finding list and each finding's disposition (the diff or line for a fix, or the rebuttal) into the conversation; "critic gate done" as a bare claim is not a proof the grader can check. Every finding fixed or explicitly rebutted.
 
 **Binary completion.** One line: all layers green with the feature demonstrated user-visibly (not merely grader-satisfied) + critic findings dispositioned + any human follow-up.
@@ -100,11 +115,15 @@ Right-sizing: the gate preamble + end state + how it is proven + one constraint 
         Execute every prerequisite that can be done now: mint the token, capture the real
         fixture, and PROVE each planned layer is actually executable. A layer you cannot
         execute is not a layer.
-- [ ] 4. Design the verification. Renumber layers from 1 for this round, cheapest-feedback-
-        first; for each: the seam it covers, the failure class it catches, the exact command,
-        and the dual assertion (rendered UI result + backend signal). Then the mandatory
-        fresh-context critic gate. V is written now, with the Problem, never after
-        implementation.
+- [ ] 4. Design the verification WITH you, never auto-infer it. One item per turn with a
+        recommendation, you approve/cut/add before it enters the brief. WHAT before HOW: first
+        the nominal cases (the feature doing its job), then walk the standing edge checklist
+        (isolation, boundary/malformed input, failure path, concurrency, repeat/state-across-
+        turns), keeping the edges that apply and saying why the rest are cut. Then place each
+        scenario at the cheapest layer that catches it and fill the scenario matrix (renumber
+        from 1, cheapest-feedback-first). The scenarios are the definition of done, the part
+        you most need to own. Then the mandatory fresh-context critic gate. V is written now,
+        with the Problem, never after implementation.
 - [ ] 5. Re-verify and hand off, only when you confirm full understanding and no open
         decisions remain. Re-run the prerequisite checks right before arming (the design-time
         smoke goes stale); a red service is brought up and confirmed with you, not left for
