@@ -35,10 +35,32 @@ flowchart TD
 - `<health command per touched service>` → `<green signal>`
 - Client-UI reachability: load the real UI a user touches, sign in, reach the exact surface.
 
-### Layers (renumbered from 1, cheapest-feedback-first)
+### Scenarios — what we prove (nominal + edges), then the matrix
 
-1. **seam:** `<the seam this covers>`, **catches:** `<failure class>`, **run:** `<exact command>`, **proof:** `<rendered UI result + backend signal>`
-2. ...
+First enumerate WHAT to prove, co-designed one at a time. **Nominal:** the feature doing its
+job, each as the observable that makes "fixed" checkable. **Edges:** walk the standing
+checklist and keep what applies (say why you cut the rest): isolation/scope, boundary/malformed
+input, failure path, concurrency, repeat/state-across-turns.
+
+Then place each at the cheapest layer that catches it. The matrix is read in one look and
+approved/cut/reordered before any prose; status is re-rendered every checkpoint (`not-run` |
+`blocked` | `substituted` | `run-for-real`, and `substituted` never counts as a pass):
+
+**Target environment for this round:** `<the deployed shared env by default, with its client
+hostname; a local stack is iteration-only and never the completion bar>`. Every row's `env`
+reads this target unless the row states why it cannot.
+
+| # | scenario | nominal / edge | layer (api\|ui) | env | assertion (UI result + backend signal) | status |
+|---|---|---|---|---|---|---|
+| 1 | `<nominal: the feature working>` | nominal | api | `<target>` | `<command → result + backend signal>` | not-run |
+| 2 | `<nominal, user-facing>` | nominal | ui | `<target>` | `<drive the real client → rendered answer + backend log line>` | not-run |
+| 3 | `<edge, incl. the specific broken occurrence>` | edge | api\|ui | `<target>` | `<assertion>` | not-run |
+| H1 | comment hygiene (standing) | hygiene | api | n/a | quote every comment the diff adds; constraint comments only, file's existing density | not-run |
+| H2 | build green (standing, if a PR is opened/pushed) | hygiene | api | n/a | the PR's checks all pass, quoted from the checks output; red = fix in-round | not-run |
+
+Each scenario proven executable in prep. Full suite + lint green is its own row. H1/H2 are
+standing rows every round: write-time constraints the critic only confirms, never a cleanup
+pass after the fact.
 
 ### Critic gate (mandatory, fresh context)
 
@@ -46,7 +68,7 @@ A context window that did not write the code reviews the diff and the verificati
 
 ## Binary completion
 
-All layers green and demonstrated user-visibly + every critic finding dispositioned + any human follow-up noted.
+All layers green (incl. H1 comment hygiene and H2 build green) and demonstrated user-visibly + every critic finding dispositioned + any human follow-up noted.
 
 ## Compiled loop condition
 
